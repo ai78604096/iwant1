@@ -4,7 +4,9 @@ import com.dm.trade.api.dto.APIResult;
 import com.dm.trade.api.dto.request.h5.GoodsListQueryOptionH5;
 import com.dm.trade.api.dto.request.order.OrderAddForm;
 import com.dm.trade.api.dto.response.order.OrderCreateResult;
+import com.dm.trade.common.http.impl.UserApi;
 import com.dm.trade.common.utils.HttpContextUtils;
+import com.dm.trade.common.utils.JSONUtils;
 import com.dm.trade.common.utils.StringUtils;
 import com.dm.trade.customer.domain.CustomerDO;
 import com.dm.trade.goods.domain.GoodsCategoryDO;
@@ -13,6 +15,9 @@ import com.dm.trade.goods.service.GoodsCategoryService;
 import com.dm.trade.goods.service.GoodsService;
 import com.dm.trade.order.service.OrderService;
 import com.google.common.collect.Maps;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +40,7 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/api/relation")
 public class APIH5Controller {
+	 private static final Logger logger = LoggerFactory.getLogger(APICustomerController.class);
 
     @Autowired
     private GoodsCategoryService goodsCategoryService;
@@ -41,7 +48,9 @@ public class APIH5Controller {
     private GoodsService goodsService;
     @Autowired
     private OrderService orderService;
-
+    @Autowired
+    private APIH5UserOpenid h5UserOpenid;
+   
     /**
      * 进入分类页面，获取商品类目，默认热销
      * @param model
@@ -51,6 +60,15 @@ public class APIH5Controller {
      */
     @RequestMapping(value = "/h5list")
     public String h5list(Model model, HttpServletRequest request) throws Exception {
+    	  String resp = null; 
+    	String code = request.getParameter("code");
+    	 resp = this.h5UserOpenid.setup2(code.toString());
+         logger.info("获取微信用户授权信息=======》" + resp);
+         Map<String, Object> map = JSONUtils.jsonToMap(resp);
+         String openId = (String) map.get("openid");//获取用户openid
+         logger.info("获取微信用户openid=======》" + openId);
+         
+         
         Map<String, Object> dishTypeParams = Maps.newHashMap();
         dishTypeParams.put("sort", "id");
         dishTypeParams.put("order", "desc");
