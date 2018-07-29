@@ -30,7 +30,7 @@ public class APIH5UserOpenid {
 	    private static final String APPID = "wx16f8d77e7418393f";
 	    private static final String APP_SECRET = "7e0a37d6c2afc722be56685024f3c31c";
 
-	    /**
+	    /**    
 	     * 首次授权获取code，然后跳转获取openid
 	     * @param request
 	     * @param response
