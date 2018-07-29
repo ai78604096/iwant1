@@ -23,7 +23,7 @@ import com.dm.trade.common.utils.StringHelper;
 import com.dm.trade.common.wx.ConfigUtil;
 
 @RestController
-@RequestMapping("/api/sysuser")
+@RequestMapping("/api/h5_openid")
 public class APIH5UserOpenid {
 	 private static final Logger logger = LoggerFactory.getLogger(APISystemUserController.class);
 
